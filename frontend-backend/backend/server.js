@@ -20,8 +20,10 @@ app.get("/", (req, res) => {
 });
 
 const executePython = async (script, args) => {
-    const arguments = args.map((arg) => arg.toString());
-    const py = spawn("python", [script, ...arguments]);
+    // const arguments = args.map((arg) => arg.toString());
+    console.log('These are args: ', args);
+    // let arguments = args.map((arg) => arg.toString());
+    const py = spawn("python", [script, ...args.map((arg) => arg.toString())]);
 
     let stdOutData = "";
     let stdErrData = "";
@@ -64,9 +66,8 @@ const executePython = async (script, args) => {
 app.post("/api/", async (req, res) => {
     const { transcript } = req.body;
     try {
-        const result = await executePython("../../ml-service/interact_ai_model.py", [
-            transcript,
-        ]);
+        const result = await executePython("../../ml-service/interact_ai_model.py", [transcript]);
+        console.log('Got it')
         res.json({ message: "Got it!", result });
     } catch (err) {
         res.status(500).json({ error: err.message });
